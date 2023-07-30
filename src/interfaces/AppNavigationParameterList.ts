@@ -1,3 +1,6 @@
 export type AppNavigationParameterList = {
-  Home: undefined;
+  AllPlaces: undefined;
+  AddPlace: undefined;
+  PlaceDetails: undefined;
+  Map: undefined;
 };
