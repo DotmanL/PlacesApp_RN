@@ -1,4 +1,4 @@
-import { Alert, Button, Image, StyleSheet, Text, View } from "react-native";
+import { Alert, Image, StyleSheet, Text, View } from "react-native";
 import {
   launchCameraAsync,
   launchImageLibraryAsync,
@@ -8,8 +8,14 @@ import {
 } from "expo-image-picker";
 import { useState } from "react";
 import { Colors } from "constants/colors";
+import OutlinedButton from "components/ui/OutlinedButton";
 
-function ImagePicker() {
+type Props = {
+  onImageTaken: (imageUri: string) => void;
+};
+
+function ImagePicker(props: Props) {
+  const { onImageTaken } = props;
   //camera permission verification is required here for IOS
   const [cameraPermissionInformation, requestPermission] =
     useCameraPermissions();
@@ -18,7 +24,6 @@ function ImagePicker() {
   async function verifyPermissions() {
     if (cameraPermissionInformation?.status === PermissionStatus.UNDETERMINED) {
       const permissionResponse = await requestPermission();
-
       return permissionResponse.granted;
     }
 
@@ -42,10 +47,16 @@ function ImagePicker() {
 
     const image = await launchCameraAsync({
       allowsEditing: true,
-      aspect: [15, 9],
-      quality: 0.5
+      // aspect: [15, 9], // this only works on android, on ios always a square and crop is broken, build camera with camera api
+      quality: 1
     });
+
+    if (!image.assets) {
+      return;
+    }
+
     setPickedImage(image.assets);
+    onImageTaken(image.assets[0].uri);
   }
 
   async function pickImageHandler() {
@@ -60,11 +71,16 @@ function ImagePicker() {
       aspect: [15, 9],
       quality: 0.5
     });
+
+    if (!image.assets) {
+      return;
+    }
+
     setPickedImage(image.assets);
+    onImageTaken(image.assets[0].uri);
   }
 
   let imagePreview = <Text style={styles.previewText}>No image taken yet</Text>;
-
   if (pickedImage) {
     imagePreview = (
       <Image source={{ uri: pickedImage[0].uri }} style={styles.imageStyle} />
@@ -74,11 +90,12 @@ function ImagePicker() {
   return (
     <View>
       <View style={styles.imagePreview}>{imagePreview}</View>
-      <Button title="Take Image" onPress={takeImageHandler} />
-      <Button
-        title="Pick an image from camera roll"
-        onPress={pickImageHandler}
-      />
+      <OutlinedButton iconName="camera" onPress={takeImageHandler}>
+        Take Image
+      </OutlinedButton>
+      <OutlinedButton iconName="images-outline" onPress={pickImageHandler}>
+        Pick an image from camera roll
+      </OutlinedButton>
     </View>
   );
 }
@@ -95,7 +112,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: Colors.primary100,
-    borderRadius: 4
+    borderRadius: 4,
+    overflow: "hidden"
   },
   imageStyle: {
     width: "100%",

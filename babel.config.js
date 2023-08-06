@@ -6,6 +6,7 @@ module.exports = function (api) {
       [
         "module-resolver",
         {
+          root: ["./src"],
           alias: {
             components: "./src/components",
             screens: "./src/screens",
@@ -14,6 +15,18 @@ module.exports = function (api) {
             util: "./src/util",
             store: "./src/store"
           }
+        }
+      ],
+      [
+        "module:react-native-dotenv",
+        {
+          moduleName: "@env",
+          path: ".env",
+          safe: false,
+          allowUndefined: true,
+          blocklist: null,
+          allowlist: null,
+          verbose: false
         }
       ]
     ]

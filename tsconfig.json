@@ -11,6 +11,7 @@
       "util/*": ["src/util/*"],
       "store/*": ["src/store/*"],
     },
+
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "lib": ["ESNext"],
@@ -20,5 +21,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "strict": true
-  }
+  },
+  "typeRoots": ["./types"],
 }

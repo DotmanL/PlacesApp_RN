@@ -1,13 +1,12 @@
 export interface ILocation {
   latitude: number;
   longitude: number;
-  name?: string;
+  address?: string;
 }
 
 export interface IPlace {
-  id: string;
+  id?: string;
   title: string;
-  imageUrl: string;
-  address: string;
+  imageUri: string;
   location: ILocation;
 }
